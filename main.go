@@ -11,11 +11,14 @@ import (
 )
 
 func main() {
+	// just for testing
+	// repository.Connect()
+
 	router := gin.Default()
 
-	db := repository.Connect()
+	// db := repository.Connect()
 
-	repository := repository.NewUserRepository(db)
+	repository := repository.NewUserRepository()
 
 	userService := services.NewUserService(*repository)
 
@@ -30,6 +33,8 @@ func main() {
 			"message": "pong",
 		})
 	})
+
+	router.GET("/users/all", userRoutes.GetAll)
 
 	router.GET("/users/:id", userRoutes.GetUser)
 

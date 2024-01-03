@@ -4,6 +4,9 @@ GET http://localhost:8080/
 ### ping
 GET http://localhost:8080/ping
 
+### get all user
+GET http://localhost:8080/users/all
+
 ### get user
 GET http://localhost:8080/users/1
 

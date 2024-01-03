@@ -48,13 +48,21 @@ func (u *userRoutesImpl) GetUser(c *gin.Context) {
 func (u *userRoutesImpl) CreateUser(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"parse error": err.Error()})
 		return
 	}
 
-	// Save user data to database or other source
+	result, err := u.userService.Create(user)
 
-	c.JSON(http.StatusOK, gin.H{"message": "User created successfully!"})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"repo error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User created successfully!",
+		"result":  result,
+	})
 }
 
 func GetUser(c *gin.Context) {

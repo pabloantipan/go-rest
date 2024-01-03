@@ -1,0 +1,17 @@
+version: "3.9"  # Specify Docker Compose file version
+
+services:
+  db:
+    image: postgres:15  # Use official PostgreSQL 15 image
+    restart: always  # Restart the container if it exits
+    environment:
+      POSTGRES_USER: myuser  # Set database user
+      POSTGRES_PASSWORD: mypassword  # Set database password
+      POSTGRES_DB: mydatabase  # Set database name
+    ports:
+      - "5432:5432"  # Map host port 5432 to container port 5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Create a volume to persist data
+
+volumes:
+  postgres-data:  # Define the named volume

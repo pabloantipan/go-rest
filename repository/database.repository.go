@@ -44,7 +44,13 @@ func PgConnect() *sql.DB {
 }
 
 func CreateUsersTable(db *sql.DB) {
-	query := "CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name TEXT, email TEXT)"
+	query := `CREATE TABLE IF NOT EXISTS users (
+		id SERIAL PRIMARY KEY,
+		cacheID VARCHAR(20) NOT NULL UNIQUE,
+		name VARCHAR(50) NOT NULL,
+		email VARCHAR(50) NOT NULL UNIQUE,
+		password VARCHAR(50) NOT NULL
+		)`
 	result, err := db.Exec(query)
 	if err != nil {
 		panic(err)
@@ -54,7 +60,7 @@ func CreateUsersTable(db *sql.DB) {
 }
 
 func (repo *UserRepository) DropUserTable() {
-	query := "DROP TABLE users IF EXISTS"
+	query := "DROP TABLE users"
 	result, err := repo.db.Exec(query)
 	if err != nil {
 		panic(err)

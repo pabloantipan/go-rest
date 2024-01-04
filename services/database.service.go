@@ -14,6 +14,7 @@ type UserService interface {
 	Create(user models.User) (sql.Result, error)
 	Update(id int, user models.User) error
 	Delete(id int) error
+	DropUserTable()
 }
 
 type UserServiceImpl struct {

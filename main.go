@@ -40,5 +40,7 @@ func main() {
 
 	router.POST("/user/create", userRoutes.CreateUser)
 
+	router.GET("/user/db/drop", userRoutes.DropUserTable)
+
 	router.Run() // listen and serve on 0.0.0.0:8080
 }

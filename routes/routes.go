@@ -13,6 +13,7 @@ type UserRoutes interface {
 	GetAll(c *gin.Context)
 	GetUser(c *gin.Context)
 	CreateUser(c *gin.Context)
+	DropUserTable(c *gin.Context)
 }
 
 type userRoutesImpl struct {
@@ -63,11 +64,6 @@ func (u *userRoutesImpl) CreateUser(c *gin.Context) {
 	})
 }
 
-// func GetUser(c *gin.Context) {
-// 	userID := c.Param("id")
-// 	fmt.Println(userID)
-
-// 	// Fetch user data from database or other source
-
-// 	c.JSON(http.StatusOK, gin.H{"user": "user_data"})
-// }
+func (u *userRoutesImpl) DropUserTable(c *gin.Context) {
+	u.userService.DropUserTable()
+}

@@ -11,18 +11,14 @@ import (
 )
 
 func main() {
-	// just for testing
-	// repository.Connect()
 
 	router := gin.Default()
 
-	// db := repository.Connect()
+	dbRepository := repository.NewDBUserRepository()
 
-	repository := repository.NewUserRepository()
+	userDBService := services.NewDBUserService(*dbRepository)
 
-	userService := services.NewUserService(*repository)
-
-	userRoutes := routes.NewUserRoutes(userService)
+	userDBRoutes := routes.NewDBUserRoutes(userDBService)
 
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "Welcome to your REST API!"})
@@ -34,13 +30,13 @@ func main() {
 		})
 	})
 
-	router.GET("/users/all", userRoutes.GetAll)
+	router.GET("/users/db/all", userDBRoutes.GetAll)
 
-	router.GET("/users/:id", userRoutes.GetUser)
+	router.GET("/users/db/:id", userDBRoutes.GetUser)
 
-	router.POST("/user/create", userRoutes.CreateUser)
+	router.POST("/user/db/create", userDBRoutes.CreateUser)
 
-	router.GET("/user/db/drop", userRoutes.DropUserTable)
+	router.GET("/user/db/drop-user-table", userDBRoutes.DropUserTable)
 
 	router.Run() // listen and serve on 0.0.0.0:8080
 }

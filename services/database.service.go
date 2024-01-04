@@ -8,7 +8,7 @@ import (
 )
 
 type UserService interface {
-	// NewUserService() *UserService
+	// NewDBUserService() *UserService
 	GetAll() ([]models.User, error)
 	GetByID(id int) (*models.User, error)
 	Create(user models.User) (sql.Result, error)
@@ -21,7 +21,7 @@ type UserServiceImpl struct {
 	userRepo repository.UserRepository
 }
 
-func NewUserService(userRepo repository.UserRepository) UserService {
+func NewDBUserService(userRepo repository.UserRepository) UserService {
 	return &UserServiceImpl{userRepo: userRepo}
 }
 

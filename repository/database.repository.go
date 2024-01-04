@@ -12,7 +12,7 @@ type UserRepository struct {
 	db *sql.DB
 }
 
-func NewUserRepository() *UserRepository {
+func NewDBUserRepository() *UserRepository {
 	return &UserRepository{db: PgConnect()}
 }
 

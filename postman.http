@@ -5,13 +5,13 @@ GET http://localhost:8080/
 GET http://localhost:8080/ping
 
 ### get all user
-GET http://localhost:8080/users/all
+GET http://localhost:8080/users/db/all
 
 ### get user
-GET http://localhost:8080/users/1
+GET http://localhost:8080/db/users/1
 
 ### register user
-POST http://localhost:8080/user/create
+POST http://localhost:8080/user/db/create
 Content-Type: application/json
 
 {

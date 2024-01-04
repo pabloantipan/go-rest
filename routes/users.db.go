@@ -9,23 +9,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserRoutes interface {
+type UserDBRoutes interface {
 	GetAll(c *gin.Context)
 	GetUser(c *gin.Context)
 	CreateUser(c *gin.Context)
 	DropUserTable(c *gin.Context)
 }
 
-type userRoutesImpl struct {
-	userService services.UserService
+type userDBRoutesImpl struct {
+	userDBService services.UserService
 }
 
-func NewUserRoutes(userService services.UserService) UserRoutes {
-	return &userRoutesImpl{userService: userService}
+func NewDBUserRoutes(userDBService services.UserService) UserDBRoutes {
+	return &userDBRoutesImpl{userDBService: userDBService}
 }
 
-func (u *userRoutesImpl) GetAll(c *gin.Context) {
-	users, err := u.userService.GetAll()
+func (u *userDBRoutesImpl) GetAll(c *gin.Context) {
+	users, err := u.userDBService.GetAll()
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -35,7 +35,7 @@ func (u *userRoutesImpl) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"users": users})
 }
 
-func (u *userRoutesImpl) GetUser(c *gin.Context) {
+func (u *userDBRoutesImpl) GetUser(c *gin.Context) {
 	userID := c.Param("id")
 	fmt.Println(userID)
 
@@ -44,14 +44,14 @@ func (u *userRoutesImpl) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"user": "user_data"})
 }
 
-func (u *userRoutesImpl) CreateUser(c *gin.Context) {
+func (u *userDBRoutesImpl) CreateUser(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"parse error": err.Error()})
 		return
 	}
 
-	result, err := u.userService.Create(user)
+	result, err := u.userDBService.Create(user)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"repo error": err.Error()})
@@ -64,6 +64,6 @@ func (u *userRoutesImpl) CreateUser(c *gin.Context) {
 	})
 }
 
-func (u *userRoutesImpl) DropUserTable(c *gin.Context) {
-	u.userService.DropUserTable()
+func (u *userDBRoutesImpl) DropUserTable(c *gin.Context) {
+	u.userDBService.DropUserTable()
 }

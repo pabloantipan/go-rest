@@ -64,3 +64,7 @@ func (*UserServiceImpl) GetByID(id int) (*models.User, error) {
 func (*UserServiceImpl) Update(id int, user models.User) error {
 	panic("unimplemented")
 }
+
+func (u *UserServiceImpl) DropUserTable() {
+	u.userRepo.DropUserTable()
+}

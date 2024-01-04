@@ -13,5 +13,10 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data  # Create a volume to persist data
 
+  redis:
+    image: redis:latest  # Use latest Redis image
+    ports:
+      - "6379:6379"  # Map container port to host port
+
 volumes:
   postgres-data:  # Define the named volume

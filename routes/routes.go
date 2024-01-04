@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"example.com/mod/models"
-	"example.com/mod/repository"
 	"example.com/mod/services"
 	"github.com/gin-gonic/gin"
 )
@@ -40,7 +39,6 @@ func (u *userRoutesImpl) GetUser(c *gin.Context) {
 	fmt.Println(userID)
 
 	// Fetch user data from database or other source
-	repository.Connect()
 
 	c.JSON(http.StatusOK, gin.H{"user": "user_data"})
 }
@@ -65,12 +63,11 @@ func (u *userRoutesImpl) CreateUser(c *gin.Context) {
 	})
 }
 
-func GetUser(c *gin.Context) {
-	userID := c.Param("id")
-	fmt.Println(userID)
+// func GetUser(c *gin.Context) {
+// 	userID := c.Param("id")
+// 	fmt.Println(userID)
 
-	// Fetch user data from database or other source
-	repository.Connect()
+// 	// Fetch user data from database or other source
 
-	c.JSON(http.StatusOK, gin.H{"user": "user_data"})
-}
+// 	c.JSON(http.StatusOK, gin.H{"user": "user_data"})
+// }

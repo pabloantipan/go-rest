@@ -16,9 +16,27 @@ Content-Type: application/json
 
 {
   "name": "test",
-  "email": "hi@hello.com"
+  "email": "hi@hello.com",
+  "password": "123456"
 }
 
 ### Drop user table
 GET http://localhost:8080/user/db/drop
 
+### Cache create user
+POST http://localhost:8080/user/cache/create
+Content-Type: application/json
+
+{
+  "id": 1,
+  "cacheID": "2",
+  "name": "test",
+  "email": "hi@hello.com",
+  "password": "1234567"
+}
+
+### Cache get all
+GET http://localhost:8080/user/cache/get-all
+
+### Cache get all
+GET http://localhost:8080/user/cache/get/2

@@ -3,29 +3,18 @@ package repository
 import (
 	"context"
 	"encoding/json"
-	"strconv"
+	"fmt"
 
 	"example.com/mod/models"
 	"github.com/go-redis/redis/v8"
-	"github.com/google/uuid"
 )
 
-type CacheCreateResponse struct {
-	Status string `json:"status"`
-	ID     string `json:"id"`
-}
-
-type CacheGetResponse struct {
-	Status string      `json:"status"`
-	User   models.User `json:"user"`
-}
-
-type CacheRepository struct {
+type UserCacheRepository struct {
 	client *redis.Client
 }
 
-func NewCacheRepository() *CacheRepository {
-	return &CacheRepository{client: CacheConnect()}
+func NewCacheUserRepository() *UserCacheRepository {
+	return &UserCacheRepository{client: CacheConnect()}
 }
 
 func CacheConnect() *redis.Client {
@@ -36,24 +25,24 @@ func CacheConnect() *redis.Client {
 	})
 }
 
-func (rdb *CacheRepository) CreateUser(user models.User) CacheCreateResponse {
+func (rdb *UserCacheRepository) CreateUser(user models.User) models.CacheCreateResponse {
 	userJSON, err := json.Marshal(user)
 	if err != nil {
 		panic(err)
 	}
-	userID := uuid.New().String()
 
-	err = rdb.client.Set(context.Background(), userID, userJSON, 0).Err()
+	err = rdb.client.Set(context.Background(), fmt.Sprintf("user:%s", user.CacheID), userJSON, 0).Err()
 	if err != nil {
 		panic(err)
 	}
 
-	return CacheCreateResponse{"User created successfully!", userID}
+	return models.CacheCreateResponse{Status: "User created successfully!"}
 }
 
-func (rdb *CacheRepository) GetUser(id int) CacheGetResponse {
+func (rdb *UserCacheRepository) GetByID(cacheID string) (models.User, error) {
 	// Get the user by ID
-	val, err := rdb.client.Get(context.Background(), strconv.Itoa(id)).Result()
+	// val, err := rdb.client.Get(context.Background(), strconv.Itoa(id)).Result()
+	val, err := rdb.client.Get(context.Background(), fmt.Sprintf("user:%s", cacheID)).Result()
 	if err != nil {
 		panic(err)
 	}
@@ -65,5 +54,36 @@ func (rdb *CacheRepository) GetUser(id int) CacheGetResponse {
 		panic(err)
 	}
 
-	return CacheGetResponse{"User found!", user}
+	return user, nil
+}
+
+func (rdb *UserCacheRepository) GetAll() ([]models.User, error) {
+	var cursor uint64
+	var keys []string
+	for {
+		var scanResult []string
+		scanResult, cursor, err := rdb.client.Scan(context.Background(), cursor, "user:*", 10).Result()
+		if err != nil {
+			panic(err)
+		}
+		keys = append(keys, scanResult...)
+		if cursor == 0 {
+			break
+		}
+	}
+
+	// Retrieve users for each key
+	var users []models.User
+	for _, key := range keys {
+		userJSON, err := rdb.client.Get(context.Background(), key).Result()
+		if err == nil {
+			var user models.User
+			err = json.Unmarshal([]byte(userJSON), &user)
+			if err == nil {
+				users = append(users, user)
+			}
+		}
+	}
+
+	return users, nil
 }

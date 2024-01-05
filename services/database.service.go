@@ -7,8 +7,8 @@ import (
 	"example.com/mod/repository"
 )
 
-type UserService interface {
-	// NewDBUserService() *UserService
+type UserDBService interface {
+	// NewDBUserService() *UserDBService
 	GetAll() ([]models.User, error)
 	GetByID(id int) (*models.User, error)
 	Create(user models.User) (sql.Result, error)
@@ -17,15 +17,15 @@ type UserService interface {
 	DropUserTable()
 }
 
-type UserServiceImpl struct {
+type UserDBServiceImpl struct {
 	userRepo repository.UserRepository
 }
 
-func NewDBUserService(userRepo repository.UserRepository) UserService {
-	return &UserServiceImpl{userRepo: userRepo}
+func NewDBUserService(userRepo repository.UserRepository) UserDBService {
+	return &UserDBServiceImpl{userRepo: userRepo}
 }
 
-func (u *UserServiceImpl) GetAll() ([]models.User, error) {
+func (u *UserDBServiceImpl) GetAll() ([]models.User, error) {
 	rows, err := u.userRepo.RunQuery("SELECT * FROM users")
 
 	if err != nil {
@@ -45,27 +45,27 @@ func (u *UserServiceImpl) GetAll() ([]models.User, error) {
 	return users, nil
 }
 
-// Create implements UserService.
-func (u *UserServiceImpl) Create(user models.User) (sql.Result, error) {
+// Create implements UserDBService.
+func (u *UserDBServiceImpl) Create(user models.User) (sql.Result, error) {
 	return u.userRepo.Exec(user)
 	// result, err := db.Exec("INSERT INTO users (name) VALUES ($1)", "John Doe")
 }
 
-// Delete implements UserService.
-func (*UserServiceImpl) Delete(id int) error {
+// Delete implements UserDBService.
+func (*UserDBServiceImpl) Delete(id int) error {
 	panic("unimplemented")
 }
 
-// GetByID implements UserService.
-func (*UserServiceImpl) GetByID(id int) (*models.User, error) {
+// GetByID implements UserDBService.
+func (*UserDBServiceImpl) GetByID(id int) (*models.User, error) {
 	panic("unimplemented")
 }
 
-// Update implements UserService.
-func (*UserServiceImpl) Update(id int, user models.User) error {
+// Update implements UserDBService.
+func (*UserDBServiceImpl) Update(id int, user models.User) error {
 	panic("unimplemented")
 }
 
-func (u *UserServiceImpl) DropUserTable() {
+func (u *UserDBServiceImpl) DropUserTable() {
 	u.userRepo.DropUserTable()
 }

@@ -17,10 +17,10 @@ type UserDBRoutes interface {
 }
 
 type userDBRoutesImpl struct {
-	userDBService services.UserService
+	userDBService services.UserDBService
 }
 
-func NewDBUserRoutes(userDBService services.UserService) UserDBRoutes {
+func NewDBUserRoutes(userDBService services.UserDBService) UserDBRoutes {
 	return &userDBRoutesImpl{userDBService: userDBService}
 }
 
